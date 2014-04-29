@@ -1,0 +1,63 @@
+head	1.1;
+access;
+symbols;
+locks
+	root:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	2014.04.11.17.28.18;	author root;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@<?xml version="1.0" standalone="no"?>
+
+<graph>
+
+	<description>
+
+	The oasis-homeserv-config Roll
+
+	</description>
+
+	<copyright>
+	Copyright (c) 2000 - 2009 The Regents of the University of California.
+	All rights reserved. Rocks(r) v5.2 www.rocksclusters.org
+	
+	</copyright>
+
+	<changelog>	
+	</changelog>
+
+	<!-- add edges here -->
+
+	<edge from="base">
+	  <to>oasis-homeserv</to>
+	</edge>
+        <order head="base">
+          <tail>oasis-homeserv</tail>
+        </order>
+      
+        <edge from="server">
+           <to>oasis-homeserv</to>
+        </edge>
+ 
+        <edge from="client">
+           <to>oasis-homeserv</to>
+        </edge>
+
+
+
+</graph>
+@

@@ -1,0 +1,87 @@
+<?xml version="1.0" standalone="no"?>
+
+<kickstart>
+
+	<description>
+	  Oasis Home server
+	</description>
+
+	<copyright>
+	Copyright (c) 2000 - 2009 The Regents of the University of California.
+	All rights reserved. Rocks(r) v5.2 www.rocksclusters.org
+	</copyright>
+
+	<changelog>
+	$Log: homeserv-config.xml,v $
+	
+	Add megaraid rpms
+	Update homeserv-config.xml
+	
+	Revision 1.2  2011/11/08 01:00:14  cai
+	
+	
+	create software raid configuration for 2 SSD drives in OSS nodes
+	
+        40GB for /
+	1GB for swap
+	rest goes to /var
+	
+	</changelog>
+
+        
+	<pre>
+	  echo "clearpart --all --initlabel --drives=sda,sdb
+	  part raid.01 --size=40000 --ondisk=sda
+	  part raid.02 --size=40000 --ondisk=sdb
+	  part swap --size=1024 --ondisk=sda
+	  part swap --size=1024 --ondisk=sdb
+	  part raid.11 --size=1 --grow --ondisk=sda
+	  part raid.12 --size=1 --grow --ondisk=sdb
+	  raid / --level=1 --device=md0 raid.01 raid.02
+	  raid /var --level=1 --device=md1 raid.11 raid.12" > /tmp/user_partition_info
+	</pre>
+
+<package>kmod-mpt3sas</package>
+<package>mpt3sas</package>
+# IB drivers and utils
+<package>libmlx4</package>
+<package>libibmad</package>
+<package>libibumad</package>
+<package>libibcm</package>
+<package>rdma</package>
+<package>infiniband-diags</package>
+<package>ibutils</package>
+<package>ibutils2</package>
+
+<post>
+
+<file name="/etc/motd" mode="append">
+    This is a Oasis Home Server with Linux ZFS
+</file>
+
+<file name="/etc/sysctl.conf" mode="append">
+# increase TCP max buffer size setable using setsockopt()
+net.core.rmem_max = 33554432
+net.core.wmem_max = 33554432
+net.ipv4.tcp_rmem = 4096 87380 33554432
+net.ipv4.tcp_wmem = 4096 65536 33554432
+net.core.netdev_max_backlog = 250000
+net.ipv4.tcp_congestion_control = htcp
+net.ipv4.ip_forward = 0
+net.ipv4.tcp_timestamps = 0
+net.ipv4.tcp_no_metrics_save = 1
+net.ipv4.tcp_moderate_rcvbuf = 1
+net.core.somaxconn = 8192
+
+vm.dirty_background_ratio = 5
+vm.dirty_ratio = 5
+
+</file>
+
+  /sbin/chkconfig --del rocks-grub
+  /sbin/chkconfig --level 2345 rdma on
+  /sbin/chkconfig --level 0123456 cpuspeed off
+
+</post>
+
+</kickstart>
